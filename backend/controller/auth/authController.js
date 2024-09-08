@@ -1,4 +1,5 @@
-import UserModel from "../../model/userModel.js";
+import { createStudent, getStudentById, } from "../../model/StudentModel.js";
+import { createUser, getUserByEmail } from "../../model/UserModel.js";
 import jwt from "jsonwebtoken";
 
 const KEY = process.env.JWT_SECRET;
