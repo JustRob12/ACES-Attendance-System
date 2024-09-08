@@ -26,13 +26,15 @@ export const getStudentById = async (studentId) => {
 };
 
 export const updateStudent = async (id, userData) => {
-  let sql = `UPDATE ${table} SET course = :course, year = :year, profilePicture = :profilePicture WHERE studentId = :studentId`;
-  const { sql: query, values } = replacePlaceholders(sql, { ...userData, id });
+  let sql = `UPDATE ${table} SET course = ?, year = ?, profilePicture = ? WHERE studentId = ?`;
+  const values = [
+    userData.studentId,
+    userData.userId,
+    userData.course,
+    userData.year,
+    userData.profilePicture
+  ];
+  
   return db.promise().query(query, values);
 };
 
-export const deleteStudent = async (id) => {
-  let sql = `DELETE FROM ${table} WHERE id = :id`;
-  const { sql: query, values } = replacePlaceholders(sql, { id });
-  return db.promise().query(query, values);
-};

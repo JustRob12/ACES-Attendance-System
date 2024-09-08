@@ -13,7 +13,7 @@ export const createUser = async (userData) => {
     userData.email,
     userData.password
   ];
-  
+
   return db.promise().query(sql, values);
 };
 
@@ -23,25 +23,32 @@ export const getUser = async () => {
 };
 
 export const getUserByEmail = async (email) => {
-  let sql = `SELECT * FROM ${table} WHERE email = :email`;
-  const { sql: query, values } = replacePlaceholders(sql, { email });
+  let sql = `SELECT * FROM ${table} WHERE email = ?`;
+  const { sql: query, values } = replacePlaceholders(sql,  email );
   return db.promise().query(query, values);
 };
 
 export const getUserById = async (id) => {
-  let sql = `SELECT * FROM ${table} WHERE id = :id`;
-  const { sql: query, values } = replacePlaceholders(sql, { id });
+  let sql = `SELECT * FROM ${table} WHERE id = ?`;
+  const { sql: query, values } = replacePlaceholders(sql, id );
   return db.promise().query(query, values);
 };
 
 export const updateUser = async (id, userData) => {
-  let sql = `UPDATE ${table} SET name = :name, email = :email, password = :password WHERE id = :id`;
-  const { sql: query, values } = replacePlaceholders(sql, { ...userData, id });
+  let sql = `UPDATE ${table} SET name = ?, email = ?, password = ? WHERE id = ?`;
+  const values = [
+    userData.userId,
+    userData.firstname,
+    userData.lastname,
+    userData.middlename,
+    userData.email,
+    userData.password
+  ];
   return db.promise().query(query, values);
 };
 
 export const deleteUser = async (id) => {
-  let sql = `DELETE FROM ${table} WHERE id = :id`;
-  const { sql: query, values } = replacePlaceholders(sql, { id });
+  let sql = `DELETE FROM ${table} WHERE id = :?`;
+  const { sql: query, values } = replacePlaceholders(sql, id );
   return db.promise().query(query, values);
 };
