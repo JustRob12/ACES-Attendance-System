@@ -1,8 +1,8 @@
 import React from "react";
 import { BackgroundLines } from "@/components/ui/background-lines";
-import acesLogo from "./assets/aces-logo.png";
+import acesLogo from "../assets/aces-logo.png";
 
-export default function App() {
+export default function ComingSoon() {
   return (
     <BackgroundLines className="flex items-center justify-center w-full flex-col px-4">
       <img src={acesLogo} alt="Aces Logo" className="size-36 z-50" />
