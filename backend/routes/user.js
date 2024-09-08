@@ -9,6 +9,7 @@ import express from "express";
 import { login, register } from "../controller/auth/authController.js";
 import { loginValidationRules, userValidationRules, validate } from "../middleware/validator.js";
 import authenticate from "../middleware/authMiddleware.js";
+import { findUser } from "../controller/user.js";
 
 const router = express.Router();
 
@@ -21,5 +22,5 @@ const router = express.Router();
 //login route
 router.post("/login",loginValidationRules(), validate, login)
 router.post("/register",userValidationRules(),validate, register)
-
+router.get("/user", authenticate, findUser)
 export default router;

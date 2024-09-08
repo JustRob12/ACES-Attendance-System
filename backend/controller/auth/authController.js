@@ -13,7 +13,7 @@ export const login = async (req, res, next) => {
     // Find the user by email
     const [rows] = await getUserByEmail(email);
     const user = rows[0];
-
+ 
     if (!user) {
       const error = new Error("Invalid email or password");
       error.status = 400;
@@ -29,10 +29,10 @@ export const login = async (req, res, next) => {
       error.success = false;
       return next(error);
     }
-
+    console.log(user);
     // Generate a JWT token
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { userId: user.id, email: user.email },
       KEY, //secret key
       { expiresIn: "1h" } // Token expiration time
     );

@@ -21,7 +21,7 @@ export const getStudent = async () => {
 };
 
 export const getStudentById = async (studentId) => {
-  let sql = `SELECT * FROM ${table} WHERE studId = ?`;  
+  let sql = `SELECT * FROM ${table} WHERE userId = ?`;  
   return db.promise().query(sql, studentId);
 };
 
