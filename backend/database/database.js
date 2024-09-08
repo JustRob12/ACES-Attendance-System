@@ -1,7 +1,7 @@
 import mysql from "mysql2";
 
 const HOST = process.env.DB_HOST;
-const USER = process.env.DB_USER;
+const USER = process.env.DB_USERNAME;
 const PASSWORD = process.env.DB_PASSWORD;
 const DATABASE = process.env.DB_NAME;
 
@@ -11,7 +11,7 @@ const db = mysql.createConnection({
   password: PASSWORD,
   database: DATABASE
 });
-
+console.log(db)
 // Connect to the database
 db.connect((err) => {
   if (err) {
