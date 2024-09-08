@@ -9,7 +9,7 @@ const app = express();
 //body parser middleware
 app.use(express.json());
 //user routes
-app.use("/api/admin/", user);
+app.use("/api/", user);
 
 // Handle 404 errors for undefined routes
 app.use((req, res, next) => {
