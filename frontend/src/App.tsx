@@ -1,4 +1,3 @@
-import React from "react";
 import { BackgroundLines } from "@/components/ui/background-lines";
 import acesLogo from "./assets/aces-logo.png";
 
