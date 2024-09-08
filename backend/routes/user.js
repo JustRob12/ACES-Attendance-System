@@ -6,8 +6,8 @@ import express from "express";
 //   updateUser,
 //   deleteUser,
 // } from "../controller/userController.js";
-import { login } from "../controller/auth/authController.js";
-import { loginValidationRules, validate } from "../middleware/validator.js";
+import { login, register } from "../controller/auth/authController.js";
+import { loginValidationRules, userValidationRules, validate } from "../middleware/validator.js";
 import authenticate from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -20,6 +20,6 @@ const router = express.Router();
 // router.delete("/users:id", authenticate,  deleteUser);
 //login route
 router.post("/login",loginValidationRules(), validate, login)
-
+router.post("/register",userValidationRules(),validate, register)
 
 export default router;

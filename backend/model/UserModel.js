@@ -4,9 +4,17 @@ import replacePlaceholders from "../util/replacePlaceholder.js";
 const table = "User";
 
 export const createUser = async (userData) => {
-  let sql = `INSERT INTO ${table} (name, email, password) VALUES (:name, :email, :password)`;
-  const { sql: query, values } = replacePlaceholders(sql, userData);
-  return db.promise().query(query, values);
+  let sql = `INSERT INTO ${table} (id, firstname, lastname, middlename, email, password) VALUES (?,?,?,?,?,?)`;
+  const values = [
+    userData.userId,
+    userData.firstname,
+    userData.lastname,
+    userData.middlename,
+    userData.email,
+    userData.password
+  ];
+  
+  return db.promise().query(sql, values);
 };
 
 export const getUser = async () => {

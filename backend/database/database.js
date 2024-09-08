@@ -11,7 +11,7 @@ const db = mysql.createConnection({
   password: PASSWORD,
   database: DATABASE
 });
-console.log(db)
+
 // Connect to the database
 db.connect((err) => {
   if (err) {
