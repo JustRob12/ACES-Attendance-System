@@ -53,7 +53,7 @@ export default function SignupForm() {
         </div>
 
         <div className="py-8">
-          <h2 className="text-2xl font-medium">Welcome to AceTracker</h2>
+          <h2 className="text-2xl font-medium">Welcome to AceTrack 👋</h2>
           <p className="text-sm">Fill in the form below to get started.</p>
         </div>
 
