@@ -5,6 +5,7 @@ import {
   getStudentId,
   updateStudent,
 } from "../model/StudentModel.js";
+import path from "path";
 
 //fetch user by id
 export const findUser = async (req, res, next) => {
@@ -33,6 +34,10 @@ export const findUser = async (req, res, next) => {
        return next(error);
      }
 
+     //clean up file path
+     const basePath = path.basename(student.profilePicture);
+     const profilePictureUrl = `${req.protocol}://${req.get('host')}/ACES-uploads/${basePath}`;
+  
      const data = {
         id: user.id,
         studId: student.studId,
@@ -42,7 +47,7 @@ export const findUser = async (req, res, next) => {
         email:user.email,
         course: student.course,
         year: student.year,
-        profilePicture:student.profilePicture
+        profilePicture:profilePictureUrl
      }
     res.status(200).json({
       success: true,
