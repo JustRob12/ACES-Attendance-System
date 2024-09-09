@@ -53,7 +53,7 @@ export default function SignupForm() {
         </div>
 
         <div className="py-8">
-          <h2 className="text-2xl font-medium">Welcome to AceTrack 👋</h2>
+          <h2 className="text-2xl font-medium">Create Personal Account</h2>
           <p className="text-sm">Fill in the form below to get started.</p>
         </div>
 
@@ -203,7 +203,10 @@ export default function SignupForm() {
         </div>
         <p className="text-sm text-center pt-5">
           Already have an account?{" "}
-          <Link className="font-medium text-[#FCA023] hover:text-[#F38538]">
+          <Link
+            to={"/login"}
+            className="font-medium text-[#FCA023] hover:text-[#F38538]"
+          >
             Log In
           </Link>
         </p>
