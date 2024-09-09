@@ -45,7 +45,7 @@ export default function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-2 h-full md:h-auto z-50 bg-white p-7 md:rounded-2xl md:border border-slate-200 text-[#202630]"
+        className="space-y-2 h-full md:h-auto z-50 md:bg-white p-7 md:rounded-2xl md:border border-slate-200 text-[#202630]"
       >
         <div className="flex items-center gap-2">
           <p className="font-semibold text-xl text-[#F38538]">ACES</p>

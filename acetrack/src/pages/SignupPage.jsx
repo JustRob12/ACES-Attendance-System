@@ -6,7 +6,7 @@ export default function Component() {
   return (
     <>
       <NavBar />
-      <div className="flex justify-center min-h-screen bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.1] text-black">
+      <div className="flex justify-center min-h-[calc(100vh-74px)] bg-white dark:bg-dot-white/[0.2] bg-dot-black/[0.1] text-black">
         <div className="w-full max-w-lg px-0 md:p-8 space-y-6">
           <SignupForm />
           {/* <p className="text-center text-muted-foreground text-xs">
