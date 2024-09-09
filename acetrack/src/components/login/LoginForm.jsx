@@ -45,7 +45,7 @@ export default function LoginForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-2 h-full z-50 bg-white p-7 md:rounded-2xl md:border border-slate-200 text-[#202630]"
+        className="space-y-2 h-full md:h-auto z-50 bg-white p-7 md:rounded-2xl md:border border-slate-200 text-[#202630]"
       >
         <div className="flex items-center gap-2">
           <img src={acesLogo} alt="Aces Logo" className="size-6" />
@@ -94,7 +94,10 @@ export default function LoginForm() {
         </div>
         <p className="text-sm text-center pt-5">
           Don't have an account?{" "}
-          <Link to={"/register"} className="font-medium text-[#FCA023] hover:text-[#F38538]">
+          <Link
+            to={"/register"}
+            className="font-medium text-[#FCA023] hover:text-[#F38538]"
+          >
             Register
           </Link>
         </p>
