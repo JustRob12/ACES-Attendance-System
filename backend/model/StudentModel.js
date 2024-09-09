@@ -1,5 +1,4 @@
 import db from "../database/database.js";
-import replacePlaceholders from "../util/replacePlaceholder.js";
 
 const table = "Student";
 
@@ -19,9 +18,14 @@ export const getStudent = async () => {
   let sql = `SELECT * FROM ${table}`;
   return db.promise().query(sql);
 };
-
-export const getStudentById = async (studentId) => {
+//get student by user id during login
+export const getStudentId = async (userId) => {
   let sql = `SELECT * FROM ${table} WHERE userId = ?`;  
+  return db.promise().query(sql, userId);
+};
+//get student using student id
+export const getStudentById = async (studentId) => {
+  let sql = `SELECT * FROM ${table} WHERE studId = ?`;  
   return db.promise().query(sql, studentId);
 };
 

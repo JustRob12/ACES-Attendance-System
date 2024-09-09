@@ -1,5 +1,4 @@
 import db from "../database/database.js";
-import replacePlaceholders from "../util/replacePlaceholder.js";
 
 const table = "User";
 
@@ -48,6 +47,6 @@ export const updateUser = async (id, userData) => {
 
 export const deleteUser = async (id) => {
   let sql = `DELETE FROM ${table} WHERE id = :?`;
-  const { sql: query, values } = replacePlaceholders(sql, id );
-  return db.promise().query(query, values);
+  
+  return db.promise().query(sql, id);
 };

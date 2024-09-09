@@ -6,7 +6,7 @@ const port = process.env.PORT || 8080;
 const app = express();
 
 //body parser middleware
-app.use(express.json());
+// app.use(express.json());
 //user routes
 app.use("/api/", user);
 

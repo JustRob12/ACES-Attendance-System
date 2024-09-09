@@ -1,21 +1,20 @@
 import { body, validationResult } from "express-validator";
 
 //define validation rules for creating a new user
-export const userValidationRules = () =>[
+export const userValidationRules = () => [
   body("firstname").notEmpty().withMessage("Firstname is required"),
   body("lastname").notEmpty().withMessage("Lastname is required"),
   body("email").notEmpty().withMessage("Email is required"),
   body("course").notEmpty().withMessage("course is required"),
   body("year").notEmpty().withMessage("year is required"),
-  body("studentId").notEmpty().withMessage("studentId is required")
+  body("studentId").notEmpty().withMessage("studentId is required"),
+  body("password").isLength({ min: 8 }).withMessage("Password length is less than 8"),
 ];
 
 export const loginValidationRules = () => [
   body("email").notEmpty().withMessage("Email is required"),
   body("password").notEmpty().withMessage("Password is required"),
 ];
-
-
 
 // Middleware to handle validation errors
 export const validate = (req, res, next) => {

@@ -2,6 +2,7 @@ import { getUser, getUserById } from "../model/UserModel.js";
 import {
   getStudent,
   getStudentById,
+  getStudentId,
   updateStudent,
 } from "../model/StudentModel.js";
 
@@ -13,7 +14,7 @@ export const findUser = async (req, res, next) => {
     // Find the user by id
     const [users] = await getUserById(req.user.userId);
     const user = users[0];
-  
+
     if (!user) {
       const error = new Error("Student not found");
       error.status = 404;
@@ -22,7 +23,7 @@ export const findUser = async (req, res, next) => {
     }
 
     // Find the student by id
-    const [students] = await getStudentById(req.user.userId);
+    const [students] = await getStudentId(req.user.userId);
     const student = students[0];
 
     if (!student) {
