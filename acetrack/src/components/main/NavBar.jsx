@@ -43,6 +43,7 @@ export default function NavBar() {
               onClick={() => {
                 window.location.href = "https://www.facebook.com/dorsu.aces";
               }}
+              className="hidden md:block"
             >
               Contact
             </Button>
