@@ -48,12 +48,12 @@ export default function SignupForm() {
         className="space-y-2 h-full md:h-auto z-50 bg-white p-7 md:rounded-2xl md:border border-slate-200 text-[#202630]"
       >
         <div className="flex items-center gap-2">
-          <img src={acesLogo} alt="Aces Logo" className="size-6" />
+          {/* <img src={acesLogo} alt="Aces Logo" className="size-6" /> */}
           <p className="font-semibold text-xl text-[#F38538]">ACES</p>
         </div>
 
         <div className="py-8">
-          <h2 className="text-2xl font-medium">Create Personal Account</h2>
+          <h2 className="text-2xl font-medium">Welcome to AceTrack</h2>
           <p className="text-sm">Fill in the form below to get started.</p>
         </div>
 
@@ -144,7 +144,7 @@ export default function SignupForm() {
                     <SelectItem value="1">1st Year</SelectItem>
                     <SelectItem value="2">2nd Year</SelectItem>
                     <SelectItem value="3">3rd Year</SelectItem>
-                    <SelectItem value="4">4rd Year</SelectItem>
+                    <SelectItem value="4">4th Year</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage className="text-xs font-light" />
@@ -170,6 +170,9 @@ export default function SignupForm() {
                   </SelectItem>
                   <SelectItem value="BSCE">
                     Bachelor of Science in Civil Engineering
+                  </SelectItem>
+                  <SelectItem value="BSM">
+                    Bachelor of Science in Mathematics
                   </SelectItem>
                   <SelectItem value="BITM">
                     Bachelor of Industrial Technology Management

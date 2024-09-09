@@ -48,7 +48,6 @@ export default function LoginForm() {
         className="space-y-2 h-full md:h-auto z-50 bg-white p-7 md:rounded-2xl md:border border-slate-200 text-[#202630]"
       >
         <div className="flex items-center gap-2">
-          <img src={acesLogo} alt="Aces Logo" className="size-6" />
           <p className="font-semibold text-xl text-[#F38538]">ACES</p>
         </div>
 
