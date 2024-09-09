@@ -1,5 +1,4 @@
 import db from "../database/database.js";
-import replacePlaceholders from "../util/replacePlaceholder.js";
 
 const table = "User";
 
@@ -24,14 +23,13 @@ export const getUser = async () => {
 
 export const getUserByEmail = async (email) => {
   let sql = `SELECT * FROM ${table} WHERE email = ?`;
-  const { sql: query, values } = replacePlaceholders(sql,  email );
-  return db.promise().query(query, values);
+
+  return db.promise().query(sql, email);
 };
 
 export const getUserById = async (id) => {
   let sql = `SELECT * FROM ${table} WHERE id = ?`;
-  const { sql: query, values } = replacePlaceholders(sql, id );
-  return db.promise().query(query, values);
+  return db.promise().query(sql, id);
 };
 
 export const updateUser = async (id, userData) => {
@@ -49,6 +47,6 @@ export const updateUser = async (id, userData) => {
 
 export const deleteUser = async (id) => {
   let sql = `DELETE FROM ${table} WHERE id = :?`;
-  const { sql: query, values } = replacePlaceholders(sql, id );
-  return db.promise().query(query, values);
+  
+  return db.promise().query(sql, id);
 };

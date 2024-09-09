@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { createStudent, getStudentById } from "../../model/StudentModel.js";
 import { createUser, getUserByEmail } from "../../model/UserModel.js";
 import jwt from "jsonwebtoken";
+import path from "path";
 
 const KEY = process.env.JWT_SECRET;
 
@@ -29,10 +30,10 @@ export const login = async (req, res, next) => {
       error.success = false;
       return next(error);
     }
-
+    console.log(user);
     // Generate a JWT token
     const token = jwt.sign(
-      { userId: user._id, email: user.email },
+      { userId: user.id, email: user.email },
       KEY, //secret key
       { expiresIn: "1h" } // Token expiration time
     );
@@ -45,19 +46,27 @@ export const login = async (req, res, next) => {
   }
 };
 export const register = async (req, res, next) => {
+  const profilePic = req.file; // Access the uploaded file
+
+  if (!profilePic) {
+    return res.status(400).json({ message: 'No profile picture uploaded' });
+  }
+  // Define the file path
+  const uploadPath = path.join("../../../ACES-uploads", profilePic.filename);
+
   try {
     const data = req.body;
+   
+    // validate if student exists
+    const [rows] = await getStudentById(data.studentId);
+    const user = rows[0];
 
-     // validate if student exists
-     const [rows] = await getStudentById(data.studentId);
-     const user = rows[0];
- 
-     if (user) {
-       const error = new Error("Student already registered");
-       error.status = 403;
-       error.success = false;
-       return next(error);
-     }
+    if (user) {
+      const error = new Error("Student already registered");
+      error.status = 403;
+      error.success = false;
+      return next(error);
+    }
 
     //generate unique id
     const userId = ulid();
@@ -66,6 +75,9 @@ export const register = async (req, res, next) => {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(data.password, salt);
 
+    //student role
+    const ROLE = "1";
+
     const userData = {
       userId: userId,
       firstname: data.firstname,
@@ -73,16 +85,17 @@ export const register = async (req, res, next) => {
       middlename: data.middlename,
       email: data.email,
       password: hashPassword,
+      role: ROLE,
     };
-   
+
     const studentData = {
       studentId: data.studentId,
       userId: userId,
       course: data.course,
       year: data.year,
-      profilePicture: "Test",
+      profilePicture: uploadPath,
     };
-    
+
     await createUser(userData);
     await createStudent(studentData);
     res.status(201).json({ success: true, message: "User created" });
