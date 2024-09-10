@@ -1,11 +1,10 @@
-import React from "react";
+import { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,22 +19,54 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
-import acesLogo from "../../assets/aces-logo.png";
 import { Link } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
+import acesLogo from "../../assets/aces-logo.png";
 
 const formSchema = z.object({
-  firstName: z.string().min(2).max(50),
-  lastName: z.string().min(2).max(50),
+  firstName: z.string().min(1, {
+    message: "First name is required",
+  }),
+  lastName: z.string().min(1, {
+    message: "Last name is required",
+  }),
+  email: z.string().email().min(1),
+  idNumber: z
+    .string()
+    .regex(/^\d{4}-\d{4}$/, {
+      message: "Invalid ID number format",
+    })
+    .max(9),
+  yearLevel: z.string().min(1, {
+    message: "Year level is required",
+  }),
+  course: z.string().min(1, {
+    message: "Course is required",
+  }),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters long",
+  }),
 });
 
 export default function SignupForm() {
+  const [showPassword, setShowPassword] = useState(false);
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
+      middleName: "",
+      email: "",
+      idNumber: "",
+      yearLevel: "",
+      course: "",
+      password: "",
     },
   });
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   function onSubmit(formData) {
     console.log(formData);
@@ -48,8 +79,8 @@ export default function SignupForm() {
         className="space-y-2 h-full md:h-auto z-50 md:bg-white p-7 md:rounded-2xl md:border border-slate-200 text-[#202630]"
       >
         <div className="flex items-center gap-2">
-          {/* <img src={acesLogo} alt="Aces Logo" className="size-6" /> */}
-          <p className="font-semibold text-xl text-[#F38538]">ACES</p>
+          <img src={acesLogo} alt="Aces Logo" className="size-6" />
+          <p className="font-semibold text-xl text-[#f05a25]">ACES</p>
         </div>
 
         <div className="py-8">
@@ -90,7 +121,10 @@ export default function SignupForm() {
           name="middleName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Middle name</FormLabel>
+              <FormLabel>
+                Middle name{" "}
+                <span className="text-[10px] text-slate-500">(optional)</span>
+              </FormLabel>
               <FormControl>
                 <Input className="rounded-lg" {...field} />
               </FormControl>
@@ -114,7 +148,7 @@ export default function SignupForm() {
         <div className="grid grid-cols-2 gap-2">
           <FormField
             control={form.control}
-            name="id"
+            name="idNumber"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>ID number</FormLabel>
@@ -190,7 +224,35 @@ export default function SignupForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input className="rounded-lg" type="password" {...field} />
+                <div className="relative w-full max-w-sm">
+                  <Input
+                    className="rounded-lg"
+                    type={showPassword ? "text" : "password"}
+                    {...field}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={togglePasswordVisibility}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff
+                        className="h-4 w-4 text-gray-500"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <Eye
+                        className="h-4 w-4 text-gray-500"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage className="text-xs font-light" />
             </FormItem>
