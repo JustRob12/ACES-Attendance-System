@@ -8,6 +8,7 @@ import {
 import authenticate from "../middleware/authMiddleware.js";
 import { findUser, uploadProfile } from "../controller/user.js";
 import upload from "../middleware/multerConfig.js";
+import extractCloudinaryPublicId from "../middleware/extractCloudinaryPublicId.js";
 
 const router = express.Router();
 
@@ -26,6 +27,7 @@ router.patch(
   "/user/uploadProfilePic",
   upload.single("profilePicture"),
   authenticate,
+  extractCloudinaryPublicId,
   uploadProfile
 );
 export default router;
