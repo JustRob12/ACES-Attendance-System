@@ -6,8 +6,7 @@ import {
   updateStudent,
   uploadProfilePic,
 } from "../model/StudentModel.js";
-import fs from "fs";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
 
 //fetch user by id
 export const findUser = async (req, res, next) => {
@@ -36,13 +35,6 @@ export const findUser = async (req, res, next) => {
       return next(error);
     }
 
-    //if profile pic path exists clean up file path, else null
-    const profilePictureUrl = student.profilePicture
-      ? `${req.protocol}://${req.get("host")}/ACES-uploads/profilePictures/${path.basename(
-          student.profilePicture
-        )}`
-      : null;
-
     const data = {
       id: user.id,
       studId: student.studId,
@@ -52,7 +44,7 @@ export const findUser = async (req, res, next) => {
       email: user.email,
       course: student.course,
       year: student.year,
-      profilePicture: profilePictureUrl,
+      profilePicture: student.profilePicture,
     };
     res.status(200).json({
       success: true,
@@ -85,9 +77,6 @@ export const uploadProfile = async (req, res, next) => {
     return next(error);
   }
 
-  //define file path
-  const uploadPath = path.join("../../../ACES-uploads", profilePic.filename);
-
   try {
     // Find the user by id
     const [users] = await getUserById(req.user.userId);
@@ -110,27 +99,27 @@ export const uploadProfile = async (req, res, next) => {
       error.success = false;
       return next(error);
     }
-
-    // Check if the student already has an existing profile picture
+    // If the student has an existing profile picture in Cloudinary, delete it
     if (student.profilePicture) {
-      const basePath = path.basename(student.profilePicture);
-      const oldProfilePath = path.resolve(`../../ACES-uploads/${basePath}`);
-  
-      // Check if the old profile picture exists and delete it
-      if (fs.existsSync(oldProfilePath)) {
-        fs.unlinkSync(oldProfilePath);
-        console.log("Old profile picture deleted");
-      }
+      const publicId = getCloudinaryPublicId(student.profilePicture);
+      await cloudinary.uploader.destroy(publicId);
+      console.log("Old profile picture deleted from Cloudinary");
     }
 
-    await uploadProfilePic(student.studId, uploadPath);
+    // Upload new profile picture to Cloudinary
+    const result = await cloudinary.uploader.upload(profilePic.path, {
+      folder: "profilePictures",
+      public_id: `${student.studId}_${Date.now()}`,
+      overwrite: true,
+    });
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Profile picture uploaded successfully!",
-      });
+    // Update the student's profile picture in the database with the Cloudinary URL
+    await uploadProfilePic(student.studId, result.secure_url);
+
+    res.status(200).json({
+      success: true,
+      message: "Profile picture uploaded successfully!",
+    });
   } catch (err) {
     const error = new Error(err.message);
     error.status = 500;

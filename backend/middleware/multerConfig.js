@@ -1,28 +1,15 @@
 import multer from 'multer';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import fs from 'fs';
+import cloudinary from "./cloudinaryConfig.js";
 
-// Get the directory of the current module (the config file's directory)
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Define the path to the ACES-uploads directory outside the project folder
-const uploadDir = path.resolve(__dirname, '../../../ACES-uploads/profilePictures'); // Adjust path as needed
-
-// Ensure the upload directory exists
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Configure storage options
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir); // Save files to the ACES-uploads directory
+// Configure Cloudinary storage for Multer
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'profilePictures', // Folder name on Cloudinary where images will be stored
+    format: async (req, file) => path.extname(file.originalname).slice(1), // Force all files to be stored in PNG format (optional)
+    public_id: (req, file) => `${Date.now()}_${path.parse(file.originalname).name}`, // Define the file name
   },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}_${file.originalname}`); // Define the file name
-  }
 });
 
 // Create multer instance with the storage configuration
