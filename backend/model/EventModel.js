@@ -4,7 +4,7 @@ const table = "Event";
 
 
 export const getEvent = async () => {
-  let sql = `SELECT * FROM ${table}`;
+  let sql = `SELECT id, name, startDate, endDate,status FROM ${table}`;
   return db.promise().query(sql);
 };
 
