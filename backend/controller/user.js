@@ -11,7 +11,7 @@ import path from "path";
 export const findUser = async (req, res, next) => {
   try {
     // console.log(req.user)
-   
+
     // Find the user by id
     const [users] = await getUserById(req.user.userId);
     const user = users[0];
@@ -28,27 +28,30 @@ export const findUser = async (req, res, next) => {
     const student = students[0];
 
     if (!student) {
-       const error = new Error("Student not found");
-       error.status = 404;
-       error.success = false;
-       return next(error);
-     }
+      const error = new Error("Student not found");
+      error.status = 404;
+      error.success = false;
+      return next(error);
+    }
 
-     //clean up file path
-     const basePath = path.basename(student.profilePicture);
-     const profilePictureUrl = `${req.protocol}://${req.get('host')}/ACES-uploads/${basePath}`;
-  
-     const data = {
-        id: user.id,
-        studId: student.studId,
-        firstname: user.firstname,
-        lastname:user.lastname,
-        middlename:user.middlename,
-        email:user.email,
-        course: student.course,
-        year: student.year,
-        profilePicture:profilePictureUrl
-     }
+    //if profile pic path exists clean up file path, else null
+    const profilePictureUrl = student.profilePicture
+      ? `${req.protocol}://${req.get("host")}/ACES-uploads/${path.basename(
+          student.profilePicture
+        )}`
+      : null;
+
+    const data = {
+      id: user.id,
+      studId: student.studId,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      middlename: user.middlename,
+      email: user.email,
+      course: student.course,
+      year: student.year,
+      profilePicture: profilePictureUrl,
+    };
     res.status(200).json({
       success: true,
       data: data,

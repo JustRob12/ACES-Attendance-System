@@ -5,8 +5,8 @@ import path from "path";
 //fetch event by id
 export const findEvent = async (req, res, next) => {
   try {
-    // Find the user by id
-    const [events] = await getUserById(req.user.userId);
+    // Find the event by id
+    const [events] = await getUserById(req.params.id);
     const event = events[0];
 
     if (!event) {
