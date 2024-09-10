@@ -101,7 +101,7 @@ export const uploadProfile = async (req, res, next) => {
     }
     // If the student has an existing profile picture in Cloudinary, delete it
     if (student.profilePicture) {
-      const publicId = req.cloudinaryPublicId;
+      const publicId = getCloudinaryPublicId(student.profilePicture);
       await cloudinary.uploader.destroy(publicId);
       console.log("Old profile picture deleted from Cloudinary");
     }
@@ -127,4 +127,10 @@ export const uploadProfile = async (req, res, next) => {
     return next(error);
   }
 };
-
+// Helper function to get the public ID from a Cloudinary URL
+const getCloudinaryPublicId = (url) => {
+  const parts = url.split('/');
+  const publicIdWithExtension = parts[parts.length - 1]; // e.g., 'profile_12345.jpg'
+  const publicId = publicIdWithExtension.split('.')[0]; // Strip the extension
+  return publicId;
+};
