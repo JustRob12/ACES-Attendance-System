@@ -35,7 +35,7 @@ export const findEvent = async (req, res, next) => {
   }
 };
 
-export const getEvent = async (req, res, next) => {
+export const getEvents = async (req, res, next) => {
   try {
     const events = await getEvent();
 

@@ -5,9 +5,9 @@ export const userValidationRules = () => [
   body("firstname").notEmpty().withMessage("Firstname is required"),
   body("lastname").notEmpty().withMessage("Lastname is required"),
   body("email").notEmpty().withMessage("Email is required"),
-  body("course").notEmpty().withMessage("course is required"),
-  body("year").notEmpty().withMessage("year is required"),
-  body("studentId").notEmpty().withMessage("studentId is required"),
+  body("course").notEmpty().withMessage("Course is required"),
+  body("year").notEmpty().withMessage("Year is required"),
+  body("studentId").notEmpty().withMessage("Student ID is required"),
   body("password").isLength({ min: 8 }).withMessage("Password length is less than 8"),
 ];
 

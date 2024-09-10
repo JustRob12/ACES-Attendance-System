@@ -30,7 +30,7 @@ export const login = async (req, res, next) => {
       error.success = false;
       return next(error);
     }
-    console.log(user);
+
     // Generate a JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email },
@@ -47,16 +47,22 @@ export const login = async (req, res, next) => {
 };
 export const register = async (req, res, next) => {
   const profilePic = req.file; // Access the uploaded file
+  //require upload profile pic
+  // if (!profilePic) {
+  //   const error = new Error("No profile picture uploaded");
+  //   error.status = 400;
+  //   error.success = false;
+  //   return next(error);
+  // }
 
-  if (!profilePic) {
-    return res.status(400).json({ message: 'No profile picture uploaded' });
-  }
-  // Define the file path
-  const uploadPath = path.join("../../../ACES-uploads", profilePic.filename);
+  // if profile pic is uploaded, define the file path
+  const uploadPath = profilePic
+    ? path.join("../../../ACES-uploads", profilePic.filename)
+    : null;
 
   try {
     const data = req.body;
-   
+
     // validate if student exists
     const [rows] = await getStudentById(data.studentId);
     const user = rows[0];
