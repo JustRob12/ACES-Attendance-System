@@ -16,7 +16,7 @@ router.post("/login", express.json(), loginValidationRules(), validate, login);
 //registration route
 router.post(
   "/register",
-  upload.single("profilePicture"),
+  express.json(),
   userValidationRules(),
   validate,
   register

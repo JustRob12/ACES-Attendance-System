@@ -46,7 +46,7 @@ export const login = async (req, res, next) => {
   }
 };
 export const register = async (req, res, next) => {
-  const profilePic = req.file; // Access the uploaded file
+  // const profilePic = req.file; // Access the uploaded file
   //require upload profile pic
   // if (!profilePic) {
   //   const error = new Error("No profile picture uploaded");
@@ -56,9 +56,9 @@ export const register = async (req, res, next) => {
   // }
 
   // if profile pic is uploaded, define the file path
-  const uploadPath = profilePic
-    ? path.join("../../../ACES-uploads/profilePictures", profilePic.filename)
-    : null;
+  // const uploadPath = profilePic
+  //   ? path.join("../../../ACES-uploads/profilePictures", profilePic.filename)
+  //   : null;
 
   try {
     const data = req.body;
@@ -99,7 +99,7 @@ export const register = async (req, res, next) => {
       userId: userId,
       course: data.course,
       year: data.year,
-      profilePicture: uploadPath,
+      // profilePicture: uploadPath,
     };
 
     await createUser(userData);
