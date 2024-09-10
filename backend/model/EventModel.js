@@ -1,6 +1,6 @@
 import db from "../database/database.js";
 
-const table = "Event";
+const table = "event";
 
 
 export const getEvent = async () => {
