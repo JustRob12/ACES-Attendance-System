@@ -5,10 +5,10 @@ import path from "path";
 //fetch event by id
 export const findEvent = async (req, res, next) => {
   try {
-    // Find the user by id
-    const [events] = await getUserById(req.user.userId);
+    // Find the event by id
+    const [events] = await getEventById(req.params.id);
     const event = events[0];
-
+   
     if (!event) {
       const error = new Error("Event not found");
       error.status = 404;
@@ -17,7 +17,7 @@ export const findEvent = async (req, res, next) => {
     }
     res.status(200).json({
       success: true,
-      data: data,
+      data: event,
     });
   } catch (err) {
     //check if invalid id format
@@ -35,9 +35,9 @@ export const findEvent = async (req, res, next) => {
   }
 };
 
-export const getEvent = async (req, res, next) => {
+export const getEvents = async (req, res, next) => {
   try {
-    const events = await getEvent();
+    const [events] = await getEvent();
 
     if (events.length <= 0) {
       const error = new Error("No events found");
@@ -47,7 +47,7 @@ export const getEvent = async (req, res, next) => {
     }
     res.status(200).json({
       success: true,
-      data: data,
+      data: events,
     });
   } catch (err) {
     //check if invalid id format

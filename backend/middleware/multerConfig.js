@@ -8,7 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Define the path to the ACES-uploads directory outside the project folder
-const uploadDir = path.resolve(__dirname, '../../../ACES-uploads'); // Adjust path as needed
+const uploadDir = path.resolve(__dirname, '../../../ACES-uploads/profilePictures'); // Adjust path as needed
 
 // Ensure the upload directory exists
 if (!fs.existsSync(uploadDir)) {
