@@ -57,7 +57,7 @@ export const register = async (req, res, next) => {
 
   // if profile pic is uploaded, define the file path
   const uploadPath = profilePic
-    ? path.join("../../../ACES-uploads", profilePic.filename)
+    ? path.join("../../../ACES-uploads/profilePictures", profilePic.filename)
     : null;
 
   try {

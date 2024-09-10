@@ -38,7 +38,7 @@ export const findUser = async (req, res, next) => {
 
     //if profile pic path exists clean up file path, else null
     const profilePictureUrl = student.profilePicture
-      ? `${req.protocol}://${req.get("host")}/ACES-uploads/${path.basename(
+      ? `${req.protocol}://${req.get("host")}/ACES-uploads/profilePictures/${path.basename(
           student.profilePicture
         )}`
       : null;
