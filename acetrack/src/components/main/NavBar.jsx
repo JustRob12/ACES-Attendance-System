@@ -6,8 +6,6 @@ export default function NavBar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  console.log(pathname);
-
   return (
     <nav className="h-[74px] w-full border-b border-slate-200 z-50">
       <div className="container mx-auto h-full">
