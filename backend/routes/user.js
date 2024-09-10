@@ -6,13 +6,13 @@ import {
   validate,
 } from "../middleware/validator.js";
 import authenticate from "../middleware/authMiddleware.js";
-import { findUser } from "../controller/user.js";
+import { findUser, uploadProfile } from "../controller/user.js";
 import upload from "../middleware/multerConfig.js";
 
 const router = express.Router();
 
 //login route
-router.post("/login",express.json(), loginValidationRules(), validate, login);
+router.post("/login", express.json(), loginValidationRules(), validate, login);
 //registration route
 router.post(
   "/register",
@@ -22,4 +22,10 @@ router.post(
   register
 );
 router.get("/user", authenticate, findUser);
+router.patch(
+  "/user/uploadProfilePic",
+  upload.single("profilePicture"),
+  authenticate,
+  uploadProfile
+);
 export default router;

@@ -9,7 +9,7 @@ export const createStudent = async (userData) => {
     userData.userId,
     userData.course,
     userData.year,
-    userData.profilePicture
+    userData.profilePicture,
   ];
   return db.promise().query(sql, values);
 };
@@ -20,13 +20,20 @@ export const getStudent = async () => {
 };
 //get student by user id during login
 export const getStudentId = async (userId) => {
-  let sql = `SELECT * FROM ${table} WHERE userId = ?`;  
+  let sql = `SELECT * FROM ${table} WHERE userId = ?`;
   return db.promise().query(sql, userId);
 };
 //get student using student id
 export const getStudentById = async (studentId) => {
-  let sql = `SELECT * FROM ${table} WHERE studId = ?`;  
+  let sql = `SELECT * FROM ${table} WHERE studId = ?`;
   return db.promise().query(sql, studentId);
+};
+
+export const uploadProfilePic = async (studentId, profilePath) => {
+  let sql = `UPDATE ${table} SET profilePicture = ? WHERE studId = ?`;
+  const values = [profilePath, studentId];
+
+  return db.promise().query(sql, values);
 };
 
 export const updateStudent = async (id, userData) => {
@@ -36,9 +43,8 @@ export const updateStudent = async (id, userData) => {
     userData.userId,
     userData.course,
     userData.year,
-    userData.profilePicture
+    userData.profilePicture,
   ];
-  
-  return db.promise().query(query, values);
-};
 
+  return db.promise().query(sql, values);
+};
