@@ -8,7 +8,6 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'profilePictures', // Folder name on Cloudinary where images will be stored
-    format: async (req, file) => path.extname(file.originalname).slice(1), // Force all files to be stored in PNG format (optional)
     public_id: (req, file) => `${Date.now()}_${path.parse(file.originalname).name}`, // Define the file name
   },
 });
