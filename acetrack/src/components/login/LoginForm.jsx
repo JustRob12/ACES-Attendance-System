@@ -1,23 +1,14 @@
-import React from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import acesLogo from "../../assets/aces-logo.png";
@@ -48,7 +39,8 @@ export default function LoginForm() {
         className="space-y-2 h-full md:h-auto z-50 md:bg-white p-7 md:rounded-2xl md:border border-slate-200 text-[#202630]"
       >
         <div className="flex items-center gap-2">
-          <p className="font-semibold text-xl text-[#F38538]">ACES</p>
+          <img src={acesLogo} alt="Aces Logo" className="size-6" />
+          <p className="font-semibold text-xl text-[#f05a25]">ACES</p>
         </div>
 
         <div className="py-8">

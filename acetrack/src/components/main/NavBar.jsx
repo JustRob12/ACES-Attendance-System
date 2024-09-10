@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import acetrackLogo from "../../assets/acetrack-logo.png";
 import { Button } from "../ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -7,14 +6,12 @@ export default function NavBar() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  console.log(pathname);
-
   return (
     <nav className="h-[74px] w-full border-b border-slate-200 z-50">
       <div className="container mx-auto h-full">
         <div className="h-full flex items-center justify-between">
           <Link to={"/"}>
-            <img src={acetrackLogo} alt="Aces Logo" className="max-h-8" />
+            <img src={acetrackLogo} alt="Aces Logo" className="max-h-6" />
           </Link>
           <div className="flex items-center gap-2">
             {pathname !== "/login" ? (
