@@ -126,9 +126,9 @@ export const refreshAccessToken = async (req, res) => {
       success: false,
       message: "Refresh token required",
     });
-
+    console.log(req);
   // Verify the refresh token
-  jwt.verify(refreshToken, REFRESH_KEY, async (err, user) => {
+  jwt.verify(refreshToken, REFRESH_KEY, async (err, userId) => {
     if (err) {
       return res.status(403).json({
         success: false,
@@ -137,10 +137,10 @@ export const refreshAccessToken = async (req, res) => {
     }
     console.log(refreshToken);
     try {
-      // Fetch user details (including email) using the user ID
-      const [users] = await getUserById(user.id);
+      // Fetch user details using the user ID
+      const [users] = await getUserById(userId);
       const currentUser = users[0];
-      console.log(user, currentUser);
+      console.log(userId, currentUser);
       // If user is not found
       if (!currentUser) {
         return res.status(404).json({
