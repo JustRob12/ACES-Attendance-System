@@ -17,27 +17,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Alert, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
-import { Link } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { AlertCircle, Eye, EyeOff, Loader2 } from "lucide-react";
 import acesLogo from "../../assets/aces-logo.png";
+import apiClient from "@/api/axios";
 
 const formSchema = z.object({
-  firstName: z.string().min(1, {
+  firstname: z.string().min(1, {
     message: "First name is required",
   }),
-  lastName: z.string().min(1, {
+  lastname: z.string().min(1, {
     message: "Last name is required",
   }),
   email: z.string().email().min(1),
-  idNumber: z
+  studentId: z
     .string()
     .regex(/^\d{4}-\d{4}$/, {
       message: "Invalid ID number format",
     })
     .max(9),
-  yearLevel: z.string().min(1, {
+  year: z.string().min(1, {
     message: "Year level is required",
   }),
   course: z.string().min(1, {
@@ -50,15 +52,18 @@ const formSchema = z.object({
 
 export default function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      middleName: "",
+      firstname: "",
+      lastname: "",
+      middlename: "",
       email: "",
-      idNumber: "",
-      yearLevel: "",
+      studentId: "",
+      year: "",
       course: "",
       password: "",
     },
@@ -68,8 +73,22 @@ export default function SignupForm() {
     setShowPassword(!showPassword);
   };
 
-  function onSubmit(formData) {
-    console.log(formData);
+  async function onSubmit(formData) {
+    try {
+      setErrorMessage("");
+      setIsFormSubmitting(true);
+      console.log(formData);
+      const res = await apiClient.post("/register", formData);
+      console.log(res);
+
+      form.reset();
+      // navigate("/login");
+    } catch (err) {
+      console.error(err);
+      setErrorMessage(err.response.data.message);
+    } finally {
+      setIsFormSubmitting(false);
+    }
   }
 
   return (
@@ -91,7 +110,7 @@ export default function SignupForm() {
         <div className="grid grid-cols-2 gap-2">
           <FormField
             control={form.control}
-            name="firstName"
+            name="firstname"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>First name</FormLabel>
@@ -104,7 +123,7 @@ export default function SignupForm() {
           />
           <FormField
             control={form.control}
-            name="lastName"
+            name="lastname"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Last name</FormLabel>
@@ -118,7 +137,7 @@ export default function SignupForm() {
         </div>
         <FormField
           control={form.control}
-          name="middleName"
+          name="middlename"
           render={({ field }) => (
             <FormItem>
               <FormLabel>
@@ -148,7 +167,7 @@ export default function SignupForm() {
         <div className="grid grid-cols-2 gap-2">
           <FormField
             control={form.control}
-            name="idNumber"
+            name="studentId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>ID number</FormLabel>
@@ -161,7 +180,7 @@ export default function SignupForm() {
           />
           <FormField
             control={form.control}
-            name="yearLevel"
+            name="year"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Year level</FormLabel>
@@ -258,11 +277,23 @@ export default function SignupForm() {
             </FormItem>
           )}
         />
+        {errorMessage && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Student is already registered.</AlertTitle>
+          </Alert>
+        )}
         <div className="pt-2">
           <Button
             type="submit"
+            disabled={isFormSubmitting}
             className="w-full transition-all duration-300 bg-[#FCA023] hover:bg-[#F38538] rounded-lg"
           >
+            {isFormSubmitting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              ""
+            )}
             Register
           </Button>
         </div>
