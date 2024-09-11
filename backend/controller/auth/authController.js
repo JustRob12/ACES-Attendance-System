@@ -119,7 +119,7 @@ export const register = async (req, res, next) => {
 };
 export const refreshAccessToken = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-
+  console.log(req.cookies)
   // Check if the refresh token exists
   if (!refreshToken)
     return res.status(401).json({
