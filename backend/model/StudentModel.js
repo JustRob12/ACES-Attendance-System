@@ -1,6 +1,6 @@
 import db from "../database/database.js";
 
-const table = "Student";
+const table = "student";
 
 export const createStudent = async (userData) => {
   let sql = `INSERT INTO ${table} (studId, userId, course, year, profilePicture) VALUES (?,?,?,?,?)`;
