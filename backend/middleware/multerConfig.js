@@ -7,8 +7,14 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary';
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'profilePictures', // Folder name on Cloudinary where images will be stored
-    public_id: (req, file) => `${Date.now()}_${path.parse(file.originalname).name}`, // Define the file name
+    folder: 'profilePictures', // Folder name on Cloudinary
+    public_id: (req, file) => {
+      // Create custom file name, without file extension (Cloudinary handles the extension)
+      const timestamp = Date.now();
+      const fileName = `${timestamp}_${path.parse(file.originalname).name}`;
+      return fileName;
+    },
+    allowed_formats: ['jpg', 'jpeg', 'png'], // Only allow these formats
   },
 });
 
@@ -17,15 +23,16 @@ const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // Limit file size to 5 MB
   fileFilter: (req, file, cb) => {
-    // Accept only certain file types
+    // Allow only jpeg, jpg, and png file types
     const allowedTypes = /jpeg|jpg|png/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
     const mimetype = allowedTypes.test(file.mimetype);
+
     if (mimetype && extname) {
-      return cb(null, true);
+      cb(null, true); // File is valid
+    } else {
+      cb(new Error('Only .jpg, .jpeg, and .png files are allowed!')); // Reject the file
     }
-    cb('Error: Images Only!');
   }
 });
-
 export default upload;
