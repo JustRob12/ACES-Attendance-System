@@ -119,7 +119,7 @@ export const register = async (req, res, next) => {
 };
 export const refreshAccessToken = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
-  console.log(req.cookies)
+
   // Check if the refresh token exists
   if (!refreshToken)
     return res.status(401).json({
@@ -135,12 +135,12 @@ export const refreshAccessToken = async (req, res) => {
         message: "Invalid refresh token",
       });
     }
-
+    console.log(refreshToken);
     try {
       // Fetch user details (including email) using the user ID
       const [users] = await getUserById(user.id);
       const currentUser = users[0];
-
+      console.log(user, currentUser);
       // If user is not found
       if (!currentUser) {
         return res.status(404).json({
