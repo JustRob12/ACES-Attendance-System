@@ -45,9 +45,10 @@ export const login = async (req, res, next) => {
     );
 
     //generate refresh token
-    const refreshToken = jwt.sign({ userId: user.id }, REFRESH_KEY, {
-      expiresIn: REFRESH_EXPIRATION,
-    });
+    const refreshToken = jwt.sign({ userId: user.id }, 
+      REFRESH_KEY, 
+      {expiresIn: REFRESH_EXPIRATION}
+    );
 
     //send refresh token as HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
@@ -128,18 +129,17 @@ export const refreshAccessToken = async (req, res) => {
     });
     
   // Verify the refresh token
-  jwt.verify(refreshToken, REFRESH_KEY, async (err, userId) => {
+  jwt.verify(refreshToken, REFRESH_KEY, async (err, user) => {
     if (err) {
       return res.status(403).json({
         success: false,
         message: "Invalid refresh token",
       });
     }
-    console.log(refreshToken);
-    console.log(userId);
+    console.log(user);
     try {
       // Fetch user details using the user ID
-      const [users] = await getUserById(userId);
+      const [users] = await getUserById(user.userId);
       const currentUser = users[0];
       console.log(currentUser);
       // If user is not found
