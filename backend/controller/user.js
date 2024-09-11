@@ -105,7 +105,7 @@ export const uploadProfile = async (req, res, next) => {
       await cloudinary.uploader.destroy(`profilePictures/${publicId}`);
       console.log("Old profile picture deleted from Cloudinary");
     }
-
+    console.log(req.file);
     //get file url
     const filePath = req.file.fileUrl;
 
