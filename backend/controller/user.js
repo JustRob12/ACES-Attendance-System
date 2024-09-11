@@ -102,6 +102,7 @@ export const uploadProfile = async (req, res, next) => {
     // If the student has an existing profile picture in Cloudinary, delete it
     if (student.profilePicture) {
       const publicId = getCloudinaryPublicId(student.profilePicture);
+      console.log(student.profilePicture, publicId)
       await cloudinary.uploader.destroy(`profilePictures/${publicId}`);
       console.log("Old profile picture deleted from Cloudinary");
     }
