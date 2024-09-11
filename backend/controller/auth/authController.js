@@ -150,10 +150,11 @@ export const refreshAccessToken = async (req, res) => {
       }
 
       // Generate a new access token with both id and email in the payload
-      const newAccessToken = generateAccessToken({
-        id: currentUser.id,
-        email: currentUser.email,
-      });
+      const newAccessToken = jwt.sign(
+        { userId: currentUser.id, email: createUser.email },
+        ACCESS_KEY, //secret key
+        { expiresIn: ACCESS_EXPIRATION } // Token expiration time
+      );
 
       // Return the new access token
       return res.json({
