@@ -82,7 +82,7 @@ export default function SignupForm() {
       console.log(res);
 
       form.reset();
-      // navigate("/login");
+      navigate("/login");
     } catch (err) {
       console.error(err);
       setErrorMessage(err.response.data.message);
