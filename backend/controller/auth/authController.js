@@ -1,7 +1,11 @@
 import { ulid } from "ulidx";
 import bcrypt from "bcryptjs";
 import { createStudent, getStudentById } from "../../model/StudentModel.js";
-import { createUser, getUserByEmail } from "../../model/UserModel.js";
+import {
+  createUser,
+  getUserByEmail,
+  getUserById,
+} from "../../model/UserModel.js";
 import jwt from "jsonwebtoken";
 
 const ACCESS_KEY = process.env.ACCESS_TOKEN_SECRET;
@@ -113,22 +117,54 @@ export const register = async (req, res, next) => {
     return next(error);
   }
 };
-
 export const refreshAccessToken = async (req, res) => {
   const refreshToken = req.cookies.refreshToken;
 
+  // Check if the refresh token exists
   if (!refreshToken)
-    return res
-      .status(401)
-      .json({ success: false, message: "Refresh token required" });
+    return res.status(401).json({
+      success: false,
+      message: "Refresh token required",
+    });
 
-  jwt.verify(refreshToken, REFRESH_KEY, (err, user) => {
-    if (err)
-      return res
-        .status(403)
-        .json({ success: false, message: "Invalid refresh token" });
+  // Verify the refresh token
+  jwt.verify(refreshToken, REFRESH_KEY, async (err, user) => {
+    if (err) {
+      return res.status(403).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
+    }
 
-    const newAccessToken = generateAccessToken({ id: user.userId });
-    res.json({ success: true, accessToken: newAccessToken });
+    try {
+      // Fetch user details (including email) using the user ID
+      const [users] = await getUserById(user.id);
+      const currentUser = users[0];
+
+      // If user is not found
+      if (!currentUser) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      // Generate a new access token with both id and email in the payload
+      const newAccessToken = generateAccessToken({
+        id: currentUser.id,
+        email: currentUser.email,
+      });
+
+      // Return the new access token
+      return res.json({
+        success: true,
+        token: newAccessToken,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to refresh access token",
+      });
+    }
   });
 };
