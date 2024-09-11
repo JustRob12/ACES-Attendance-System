@@ -106,15 +106,11 @@ export const uploadProfile = async (req, res, next) => {
       console.log("Old profile picture deleted from Cloudinary");
     }
 
-    // Upload new profile picture to Cloudinary
-    const result = await cloudinary.uploader.upload(profilePic.path, {
-      folder: "profilePictures",
-      public_id: `${student.studId}_${Date.now()}`,
-      overwrite: true,
-    });
+    //get file url
+    const filePath = req.file.fileUrl;
 
     // Update the student's profile picture in the database with the Cloudinary URL
-    await uploadProfilePic(student.studId, result.secure_url);
+    await uploadProfilePic(student.studId, filePath);
 
     res.status(200).json({
       success: true,
