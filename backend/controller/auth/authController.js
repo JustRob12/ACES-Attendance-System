@@ -54,7 +54,7 @@ export const login = async (req, res, next) => {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: REFRESH_EXPIRATION,
     }); // 7 days
 
     res.status(200).json({ success: true, message: "Login successful", token });

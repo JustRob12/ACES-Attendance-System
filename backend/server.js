@@ -4,12 +4,17 @@ import event from "./routes/event.js";
 import auth from "./routes/auth.js";
 import errorHandler from "./middleware/error.js";
 import cors from "cors";
+import cookieParser from 'cookie-parser';
 
 const port = process.env.PORT || 8080;
 const app = express();
 
 //enable cors for all origins
 app.use(cors());
+//parse cookies
+app.use(cookieParser());
+
+
 //auth routes
 app.use("/api/", auth)
 //user routes
