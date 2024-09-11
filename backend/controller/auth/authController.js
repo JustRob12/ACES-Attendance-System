@@ -1,11 +1,17 @@
 import { ulid } from "ulidx";
 import bcrypt from "bcryptjs";
 import { createStudent, getStudentById } from "../../model/StudentModel.js";
-import { createUser, getUserByEmail } from "../../model/UserModel.js";
+import {
+  createUser,
+  getUserByEmail,
+  getUserById,
+} from "../../model/UserModel.js";
 import jwt from "jsonwebtoken";
-import path from "path";
 
-const KEY = process.env.JWT_SECRET;
+const ACCESS_KEY = process.env.ACCESS_TOKEN_SECRET;
+const ACCESS_EXPIRATION = process.env.ACCESS_TOKEN_EXPIRATION;
+const REFRESH_KEY = process.env.REFRESH_TOKEN_SECRET;
+const REFRESH_EXPIRATION = process.env.REFRESH_TOKEN_EXPIRATION;
 
 export const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -34,9 +40,24 @@ export const login = async (req, res, next) => {
     // Generate a JWT token
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      KEY, //secret key
-      { expiresIn: "1h" } // Token expiration time
+      ACCESS_KEY, //secret key
+      { expiresIn: ACCESS_EXPIRATION } // Token expiration time
     );
+
+    //generate refresh token
+    const refreshToken = jwt.sign({ userId: user.id }, 
+      REFRESH_KEY, 
+      {expiresIn: REFRESH_EXPIRATION}
+    );
+
+    //send refresh token as HTTP-only cookie
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    }); // 7 days
+
     res.status(200).json({ success: true, message: "Login successful", token });
   } catch (err) {
     const error = new Error(err.message);
@@ -46,7 +67,6 @@ export const login = async (req, res, next) => {
   }
 };
 export const register = async (req, res, next) => {
-
   try {
     const data = req.body;
 
@@ -85,7 +105,7 @@ export const register = async (req, res, next) => {
       studentId: data.studentId,
       userId: userId,
       course: data.course,
-      year: data.year
+      year: data.year,
     };
 
     await createUser(userData);
@@ -97,4 +117,56 @@ export const register = async (req, res, next) => {
     error.success = false;
     return next(error);
   }
+};
+export const refreshAccessToken = async (req, res) => {
+  const refreshToken = req.cookies.refreshToken;
+
+  // Check if the refresh token exists
+  if (!refreshToken)
+    return res.status(401).json({
+      success: false,
+      message: "Refresh token required",
+    });
+    
+  // Verify the refresh token
+  jwt.verify(refreshToken, REFRESH_KEY, async (err, user) => {
+    if (err) {
+      return res.status(403).json({
+        success: false,
+        message: "Invalid refresh token",
+      });
+    }
+    console.log(user);
+    try {
+      // Fetch user details using the user ID
+      const [users] = await getUserById(user.userId);
+      const currentUser = users[0];
+      console.log(currentUser);
+      // If user is not found
+      if (!currentUser) {
+        return res.status(404).json({
+          success: false,
+          message: "User not found",
+        });
+      }
+
+      // Generate a new access token with both id and email in the payload
+      const newAccessToken = jwt.sign(
+        { userId: currentUser.id, email: createUser.email },
+        ACCESS_KEY, //secret key
+        { expiresIn: ACCESS_EXPIRATION } // Token expiration time
+      );
+
+      // Return the new access token
+      return res.json({
+        success: true,
+        token: newAccessToken,
+      });
+    } catch (error) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to refresh access token",
+      });
+    }
+  });
 };

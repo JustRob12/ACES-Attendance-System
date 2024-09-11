@@ -4,7 +4,7 @@ const HOST = process.env.DB_HOST;
 const USER = process.env.DB_USERNAME;
 const PASSWORD = process.env.DB_PASSWORD;
 const DATABASE = process.env.DB_NAME;
-const DB_PORT = process.env.DB_PORT;
+const DB_PORT = process.env.DB_PORT || 3306;
 
 const db = mysql.createConnection({
   host: HOST,
