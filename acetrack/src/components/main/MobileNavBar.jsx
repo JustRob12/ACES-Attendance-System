@@ -3,23 +3,23 @@ import { NavLink } from "react-router-dom";
 
 function MobileNavBar() {
   return (
-    <nav className="h-14  fixed w-full bottom-0">
+    <nav className="h-14 fixed w-full bottom-0">
       <div className="h-full container mx-auto flex items-center justify-between">
         <NavLink to={"/"} className="flex flex-col items-center">
-          <Home />
-          <span className="text-sm font-medium">Home</span>
+          <Home size={18}/>
+          <span className="text-xs font-medium">Home</span>
         </NavLink>
         <NavLink to={"/"} className="flex flex-col items-center">
-          <CalendarFold />
-          <span className="text-sm font-medium">Calendar</span>
+          <CalendarFold size={18}/>
+          <span className="text-xs font-medium">Calendar</span>
         </NavLink>
         <NavLink to={"/"} className="flex flex-col items-center">
-          <QrCode />
-          <span className="text-sm font-medium">My QR</span>
+          <QrCode size={18}/>
+          <span className="text-xs font-medium">My QR</span>
         </NavLink>
         <NavLink to={"/"} className="flex flex-col items-center">
-          <Settings2 />
-          <span className="text-sm font-medium">Settings</span>
+          <Settings2 size={18}/>
+          <span className="text-xs font-medium">Settings</span>
         </NavLink>
       </div>
     </nav>
