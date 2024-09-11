@@ -126,7 +126,7 @@ export const refreshAccessToken = async (req, res) => {
       success: false,
       message: "Refresh token required",
     });
-    console.log(req);
+    
   // Verify the refresh token
   jwt.verify(refreshToken, REFRESH_KEY, async (err, userId) => {
     if (err) {
@@ -136,11 +136,12 @@ export const refreshAccessToken = async (req, res) => {
       });
     }
     console.log(refreshToken);
+    console.log(userId);
     try {
       // Fetch user details using the user ID
       const [users] = await getUserById(userId);
       const currentUser = users[0];
-      console.log(userId, currentUser);
+      console.log(currentUser);
       // If user is not found
       if (!currentUser) {
         return res.status(404).json({
