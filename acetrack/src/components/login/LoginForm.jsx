@@ -12,14 +12,21 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import acesLogo from "../../assets/aces-logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import apiClient from "@/api/axios";
 
 const formSchema = z.object({
-  email: z.string().min(2).max(50),
-  password: z.string().min(2).max(50),
+  email: z.string().email(),
+  password: z.string().min(8, { message: "Password is requried" }),
 });
 
 export default function LoginForm() {
+  const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+  const [isFormSubmitting, setIsFormSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -28,9 +35,27 @@ export default function LoginForm() {
     },
   });
 
-  function onSubmit(formData) {
-    console.log(formData);
+  async function onSubmit(formData) {
+    try {
+      setErrorMessage("");
+      setIsFormSubmitting(true);
+      console.log(formData);
+      const res = await apiClient.post("/login", formData);
+      console.log(res);
+
+      form.reset();
+      // navigate("/login");
+    } catch (err) {
+      console.error(err);
+      setErrorMessage(err.response.data.message);
+    } finally {
+      setIsFormSubmitting(false);
+    }
   }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <Form {...form}>
@@ -68,7 +93,35 @@ export default function LoginForm() {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input className="rounded-lg" type="password" {...field} />
+                <div className="relative w-full max-w-sm">
+                  <Input
+                    className="rounded-lg"
+                    type={showPassword ? "text" : "password"}
+                    {...field}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={togglePasswordVisibility}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? (
+                      <EyeOff
+                        className="h-4 w-4 text-gray-500"
+                        aria-hidden="true"
+                      />
+                    ) : (
+                      <Eye
+                        className="h-4 w-4 text-gray-500"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </Button>
+                </div>
               </FormControl>
               <FormMessage className="text-xs font-light" />
             </FormItem>
@@ -78,8 +131,14 @@ export default function LoginForm() {
         <div className="pt-2">
           <Button
             type="submit"
+            disabled={isFormSubmitting}
             className="w-full transition-all duration-300 bg-[#FCA023] hover:bg-[#F38538] rounded-lg"
           >
+            {isFormSubmitting ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              ""
+            )}
             Log In
           </Button>
         </div>
