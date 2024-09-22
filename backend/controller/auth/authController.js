@@ -45,15 +45,33 @@ export const login = async (req, res, next) => {
     );
 
     //generate refresh token
-    const refreshToken = jwt.sign({ userId: user.id }, 
-      REFRESH_KEY, 
-      {expiresIn: REFRESH_EXPIRATION}
-    );
+    const refreshToken = jwt.sign({ userId: user.id }, REFRESH_KEY, {
+      expiresIn: REFRESH_EXPIRATION,
+    });
+
+    //for testing
+    if (process.env.VERSION == "prod") {
+      //send refresh token as HTTP-only cookie
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      }); // 7 days
+    } else if (process.env.VERSION == "dev") {
+      //send refresh token as HTTP-only cookie
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "none",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      }); // 7 days
+    }
 
     //send refresh token as HTTP-only cookie
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: "none",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     }); // 7 days
@@ -127,7 +145,7 @@ export const refreshAccessToken = async (req, res) => {
       success: false,
       message: "Refresh token required",
     });
-    
+
   // Verify the refresh token
   jwt.verify(refreshToken, REFRESH_KEY, async (err, user) => {
     if (err) {
