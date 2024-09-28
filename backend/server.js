@@ -9,8 +9,13 @@ import cookieParser from 'cookie-parser';
 const port = process.env.PORT || 8080;
 const app = express();
 
+const corsOptions = {
+  origin: true, 
+  credentials: true, // Allow cookies and credentials
+};
+
 //enable cors for all origins
-app.use(cors());
+app.use(cors(corsOptions));
 //parse cookies
 app.use(cookieParser());
 
