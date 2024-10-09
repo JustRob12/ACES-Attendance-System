@@ -1,4 +1,4 @@
-import { getUser, getUserById } from "../model/UserModel.js";
+import { getUser, getUserById, updateUser } from "../model/UserModel.js";
 import {
   getStudent,
   getStudentById,
@@ -65,6 +65,39 @@ export const findUser = async (req, res, next) => {
     return next(error);
   }
 };
+export const updateProfile = async (req, res, next) => {
+  try {
+    const data = req.body;
+
+    // Find the user by id
+    const [users] = await getUserById(req.user.userId);
+    const user = users[0];
+
+    if (!user) {
+      const error = new Error("Student not found");
+      error.status = 404;
+      error.success = false;
+      return next(error);
+    }
+    // Use existing values if the new data is an empty string or null
+    const updatedData = {
+      firstname: data.firstname || user.firstname, // If data.firstname is empty or null, fallback to user.firstname
+      lastname: data.lastname || user.lastname,
+      middlename: data.middlename || user.middlename,
+      email: data.email || user.email,
+    };
+    await updateUser(req.user.userId, updatedData);
+
+    //     await updateStudent({ year, course });
+
+    res.status(200).json({ success: true, message: "User updated" });
+  } catch (err) {
+    const error = new Error(err.message);
+    error.status = 500;
+    error.success = false;
+    return next(error);
+  }
+};
 
 export const uploadProfile = async (req, res, next) => {
   const profilePic = req.file; // Access the uploaded file
@@ -101,8 +134,10 @@ export const uploadProfile = async (req, res, next) => {
     }
     // If the student has an existing profile picture in Cloudinary, delete it
     if (student.profilePicture) {
-      const publicId = `profilePictures/${getCloudinaryPublicId(student.profilePicture)}`;
-      
+      const publicId = `profilePictures/${getCloudinaryPublicId(
+        student.profilePicture
+      )}`;
+
       await cloudinary.uploader.destroy(publicId);
       console.log("Old profile picture deleted from Cloudinary");
     }

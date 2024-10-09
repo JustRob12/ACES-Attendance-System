@@ -32,17 +32,17 @@ export const getUserById = async (id) => {
   return db.promise().query(sql, id);
 };
 
-export const updateUser = async (id, userData) => {
-  let sql = `UPDATE ${table} SET name = ?, email = ?, password = ? WHERE id = ?`;
+export const updateUser = async (userId, userData) => {
+  let sql = `UPDATE ${table} SET firstname = ?, lastname= ?, middlename = ?, email = ? WHERE id = ?`;
   const values = [
-    userData.userId,
     userData.firstname,
     userData.lastname,
     userData.middlename,
     userData.email,
-    userData.password
+    userId,
   ];
-  return db.promise().query(query, values);
+  console.log(userData)
+  return db.promise().query(sql, values);
 };
 
 export const deleteUser = async (id) => {
