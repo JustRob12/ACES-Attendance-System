@@ -37,13 +37,12 @@ export const uploadProfilePic = async (studentId, profilePath) => {
 };
 
 export const updateStudent = async (id, userData) => {
-  let sql = `UPDATE ${table} SET course = ?, year = ?, profilePicture = ? WHERE studentId = ?`;
+  let sql = `UPDATE ${table} SET course = ?, year = ?, profilePicture = ? WHERE studId = ?`;
   const values = [
-    userData.studentId,
-    userData.userId,
     userData.course,
     userData.year,
     userData.profilePicture,
+    id
   ];
 
   return db.promise().query(sql, values);

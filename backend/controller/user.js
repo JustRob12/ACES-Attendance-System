@@ -79,16 +79,33 @@ export const updateProfile = async (req, res, next) => {
       error.success = false;
       return next(error);
     }
+
+    // Find the student by id
+    const [students] = await getStudentId(req.user.userId);
+    const student = students[0];
+
+    if (!student) {
+      const error = new Error("Student not found");
+      error.status = 404;
+      error.success = false;
+      return next(error);
+    }
+
     // Use existing values if the new data is an empty string or null
-    const updatedData = {
+    const userData = {
       firstname: data.firstname || user.firstname, // If data.firstname is empty or null, fallback to user.firstname
       lastname: data.lastname || user.lastname,
       middlename: data.middlename || user.middlename,
       email: data.email || user.email,
     };
-    await updateUser(req.user.userId, updatedData);
 
-    //     await updateStudent({ year, course });
+    const studentData = {
+      course: data.course || student.course,
+      year: data.year || student.year,
+    };
+
+    await updateUser(req.user.userId, userData);
+    await updateStudent(student.studId, studentData);
 
     res.status(200).json({ success: true, message: "User updated" });
   } catch (err) {
@@ -114,7 +131,7 @@ export const uploadProfile = async (req, res, next) => {
     // Find the user by id
     const [users] = await getUserById(req.user.userId);
     const user = users[0];
-
+   
     if (!user) {
       const error = new Error("Student not found");
       error.status = 404;
@@ -132,6 +149,8 @@ export const uploadProfile = async (req, res, next) => {
       error.success = false;
       return next(error);
     }
+
+    
     // If the student has an existing profile picture in Cloudinary, delete it
     if (student.profilePicture) {
       const publicId = `profilePictures/${getCloudinaryPublicId(
