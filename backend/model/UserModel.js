@@ -3,16 +3,17 @@ import db from "../database/database.js";
 const table = "user";
 
 export const createUser = async (userData) => {
-  let sql = `INSERT INTO ${table} (id, firstname, lastname, middlename, email, password) VALUES (?,?,?,?,?,?)`;
+  let sql = `INSERT INTO ${table} (id, firstname, lastname, middlename, email, password, role) VALUES (?,?,?,?,?,?,?)`;
   const values = [
     userData.userId,
     userData.firstname,
     userData.lastname,
     userData.middlename,
     userData.email,
-    userData.password
+    userData.password,
+    userData.role
   ];
-
+  // console.log(userData)
   return db.promise().query(sql, values);
 };
 

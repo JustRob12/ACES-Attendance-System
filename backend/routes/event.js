@@ -1,13 +1,33 @@
 import express from "express";
-
-import {authenticate, authorizeRole} from "../middleware/authMiddleware.js";
-import { getEvents, findEvent, insertEvent } from "../controller/event.js";
-
+import upload from "../middleware/multerConfig.js";
+import { authenticate, authorizeRole } from "../middleware/authMiddleware.js";
+import {
+  getEvents,
+  findEvent,
+  insertEvent,
+  modifyEvent,
+  uploadBanner,
+} from "../controller/event.js";
+import { eventValidationRules, validate } from "../middleware/validator.js";
 
 const router = express.Router();
 
-router.post("/event", authenticate, authorizeRole("admin"), express.json(), insertEvent);
+router.post(
+  "/event",
+  authenticate,
+  authorizeRole("admin"),
+  express.json(),
+  eventValidationRules(),
+  validate,
+  insertEvent
+);
 router.get("/event", authenticate, getEvents);
 router.get("/event/:id", authenticate, findEvent);
-
+router.patch("/event/:id", authenticate, express.json(), modifyEvent);
+router.patch(
+  "/event/:id/uploadBanner",
+  upload.single("banner"),
+  authenticate,
+  uploadBanner
+);
 export default router;

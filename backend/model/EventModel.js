@@ -3,15 +3,13 @@ import db from "../database/database.js";
 const table = "event";
 
 export const createEvent = async (eventData) => {
-  let sql = `INSERT INTO ${table} (id, name, description, startDate, endDate, checkIn, checkOut, status) VALUES (?,?,?,?,?,?,?,?)`;
+  let sql = `INSERT INTO ${table} (id, name, description, startDate, endDate, status) VALUES (?,?,?,?,?,?)`;
   const values = [
     eventData.id,
     eventData.name,
     eventData.description,
     eventData.startDate,
     eventData.endDate,
-    eventData.checkIn,
-    eventData.checkOut,
     eventData.status,
   ];
 
@@ -19,14 +17,12 @@ export const createEvent = async (eventData) => {
 };
 
 export const updateEvent = async (eventId, eventData) =>{
-  let sql = `UPDATE ${table} SET name = ?, description= ?, startDate = ?, endDate = ?, checkIn = ?, checkOut = ?, status = ? WHERE id = ?`;
+  let sql = `UPDATE ${table} SET name = ?, description= ?, startDate = ?, endDate = ?, status = ? WHERE id = ?`;
   const values = [
     eventData.name,
     eventData.description,
     eventData.startDate,
     eventData.endDate,
-    eventData.checkIn,
-    eventData.checkOut,
     eventData.status,
     eventId,
   ];
@@ -34,7 +30,7 @@ export const updateEvent = async (eventId, eventData) =>{
   return db.promise().query(sql, values);
 }
 
-export const uploadBanner = async (eventId, bannerPath) => {
+export const uploadEventBanner = async (eventId, bannerPath) => {
   let sql = `UPDATE ${table} SET banner = ? WHERE id = ?`;
   const values = [bannerPath, eventId];
 
@@ -42,7 +38,7 @@ export const uploadBanner = async (eventId, bannerPath) => {
 };
 
 export const getEvent = async () => {
-  let sql = `SELECT id, name, description, startDate, endDate, checkIn, checkOut, location, banner, status FROM ${table}`;
+  let sql = `SELECT id, name, description, startDate, endDate, location, banner, status FROM ${table}`;
   return db.promise().query(sql);
 };
 

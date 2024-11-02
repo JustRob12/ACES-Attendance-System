@@ -7,7 +7,7 @@ import {
   uploadProfilePic,
 } from "../model/StudentModel.js";
 import { v2 as cloudinary } from "cloudinary";
-
+import { getCloudinaryPublicId } from "../helper/getPublicId.js";
 //fetch user by id
 export const findUser = async (req, res, next) => {
   try {
@@ -131,7 +131,7 @@ export const uploadProfile = async (req, res, next) => {
     // Find the user by id
     const [users] = await getUserById(req.user.userId);
     const user = users[0];
-   
+    console.log(user)
     if (!user) {
       const error = new Error("Student not found");
       error.status = 404;
@@ -153,7 +153,7 @@ export const uploadProfile = async (req, res, next) => {
     
     // If the student has an existing profile picture in Cloudinary, delete it
     if (student.profilePicture) {
-      const publicId = `profilePictures/${getCloudinaryPublicId(
+      const publicId = `acetrack/${getCloudinaryPublicId(
         student.profilePicture
       )}`;
 
@@ -176,11 +176,4 @@ export const uploadProfile = async (req, res, next) => {
     error.success = false;
     return next(error);
   }
-};
-// Helper function to get the public ID from a Cloudinary URL
-const getCloudinaryPublicId = (url) => {
-  const parts = url.split("/");
-  const publicIdWithExtension = parts[parts.length - 1]; // e.g., 'profile_12345.jpg'
-  const publicId = publicIdWithExtension.split(".")[0]; // Strip the extension
-  return publicId;
 };

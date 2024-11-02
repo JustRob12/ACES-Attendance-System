@@ -31,6 +31,4 @@ export const eventValidationRules = () =>[
   body("name").notEmpty().withMessage("Name is required"),
   body("startDate").notEmpty().withMessage("Start date is required"),
   body("endDate").notEmpty().withMessage("End date is required"),
-  body("checkIn").notEmpty().withMessage("Check in  is required"),
-  body("checkOut").notEmpty().withMessage("Check out is required"),
 ]

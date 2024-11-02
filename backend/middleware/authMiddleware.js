@@ -34,10 +34,10 @@ export const authorizeRole = (...requiredRoles) => {
         .json({ success: false, message: "Authentication required" });
     }
 
-    const user = await getUserById(req.user.userId);
-    
+    const [user] = await getUserById(req.user.userId);
+   
     // Translate the required roles to their database values
-    const allowedRoles = requiredRoles.map((user) => roleMapping[user]);
+    const allowedRoles = requiredRoles.map((user) => roleMapping[user[0]]);
   
     // Check if the user's role is in the list of allowed roles
     if (!allowedRoles.includes(user.role)) {

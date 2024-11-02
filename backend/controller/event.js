@@ -3,8 +3,11 @@ import {
   getEventById,
   createEvent,
   updateEvent,
+  uploadEventBanner
 } from "../model/EventModel.js";
 import { ulid } from "ulidx";
+import { getCloudinaryPublicId } from "../helper/getPublicId.js";
+import { v2 as cloudinary } from "cloudinary";
 
 export const insertEvent = async (req, res, next) => {
   try {
@@ -18,10 +21,9 @@ export const insertEvent = async (req, res, next) => {
       description: data.description,
       startDate: data.startDate,
       endDate: data.endDate,
-      checkIn: data.checkIn,
-      checkOut: data.checkOut,
       status: status,
     };
+
     await createEvent(eventData);
 
     res.status(201).json({ success: true, message: "Event created" });
@@ -34,6 +36,7 @@ export const insertEvent = async (req, res, next) => {
 };
 
 export const modifyEvent = async (req, res, next) => {
+  const data = req.body;
   try {
     // Find the event by id
     const [events] = await getEventById(req.params.id);
@@ -48,13 +51,11 @@ export const modifyEvent = async (req, res, next) => {
 
     // Use existing values if the new data is an empty string or null
     const eventData = {
-      name: data.name || user.name, // If data.name is empty or null, fallback to user.firstname
-      description: data.description || user.description,
-      startDate: data.startDate || user.startDate,
-      endDate: data.endDate || user.endDate,
-      checkIn: data.checkIn || user.checkIn,
-      checkOut: data.checkOut || user.checkOut,
-      status: data.status || user.status,
+      name: data.name || data.name, // If data.name is empty or null, fallback to data.firstname
+      description: data.description || data.description,
+      startDate: data.startDate || data.startDate,
+      endDate: data.endDate || data.endDate,
+      status: data.status || data.status,
     };
 
     await updateEvent(req.params.id, eventData);
@@ -80,8 +81,53 @@ export const modifyEvent = async (req, res, next) => {
 };
 
 export const uploadBanner = async (req, res, next) => {
+  const banner = req.file; // Access the uploaded file
 
-}
+  //require upload  banner
+  if (!banner) {
+    const error = new Error("No banner uploaded");
+    error.status = 400;
+    error.success = false;
+    return next(error);
+  }
+
+  try {
+    // Find the user by id
+    const [events] = await getEventById(req.params.id);
+    const event = events[0];
+
+    if (!event) {
+      const error = new Error("Event not found");
+      error.status = 404;
+      error.success = false;
+      return next(error);
+    }
+
+    // If the event has an existing baner in Cloudinary, delete it
+    if (event.banner) {
+      const publicId = `acetrack/${getCloudinaryPublicId(event.banner)}`;
+
+      await cloudinary.uploader.destroy(publicId);
+      console.log("Old banner deleted from Cloudinary");
+    }
+   
+    //get file url
+    const filePath = req.file.path;
+    console.log(filePath)
+    // // Update the event's baner in the database with the Cloudinary URL
+    await uploadEventBanner(req.params.id, filePath);
+
+    res.status(200).json({
+      success: true,
+      message: "Banner uploaded successfully!",
+    });
+  } catch (err) {
+    const error = new Error(err.message);
+    error.status = 500;
+    error.success = false;
+    return next(error);
+  }
+};
 //fetch event by id
 export const findEvent = async (req, res, next) => {
   try {

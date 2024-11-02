@@ -7,7 +7,7 @@ import { CloudinaryStorage } from 'multer-storage-cloudinary';
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'profilePictures', // Folder name on Cloudinary
+    folder: 'acetrack', // Folder name on Cloudinary
     public_id: (req, file) => {
       // Create custom file name, without file extension (Cloudinary handles the extension)
       const timestamp = Date.now();
