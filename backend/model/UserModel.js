@@ -47,7 +47,7 @@ export const updateUser = async (userId, userData) => {
 };
 
 export const deleteUser = async (id) => {
-  let sql = `DELETE FROM ${table} WHERE id = :?`;
+  let sql = `DELETE FROM ${table} WHERE id = ?`;
   
   return db.promise().query(sql, id);
 };

@@ -3,7 +3,8 @@ import {
   getEventById,
   createEvent,
   updateEvent,
-  uploadEventBanner
+  uploadEventBanner,
+  deleteEvent,
 } from "../model/EventModel.js";
 import { ulid } from "ulidx";
 import { getCloudinaryPublicId } from "../helper/getPublicId.js";
@@ -110,10 +111,10 @@ export const uploadBanner = async (req, res, next) => {
       await cloudinary.uploader.destroy(publicId);
       console.log("Old banner deleted from Cloudinary");
     }
-   
+
     //get file url
     const filePath = req.file.path;
-    console.log(filePath)
+    console.log(filePath);
     // // Update the event's baner in the database with the Cloudinary URL
     await uploadEventBanner(req.params.id, filePath);
 
@@ -174,6 +175,48 @@ export const getEvents = async (req, res, next) => {
     res.status(200).json({
       success: true,
       data: events,
+    });
+  } catch (err) {
+    //check if invalid id format
+    if (err.name === "Cast Error") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid ID format",
+      });
+    }
+
+    const error = new Error(err.message);
+    error.status = 500;
+    error.success = false;
+    return next(error);
+  }
+};
+
+export const removeEvent = async (req, res, next) => {
+  try {
+    // Find the event by id
+    const [events] = await getEventById(req.params.id);
+    const event = events[0];
+
+    if (!event) {
+      const error = new Error("Event not found");
+      error.status = 404;
+      error.success = false;
+      return next(error);
+    }
+     // If the event has an existing baner in Cloudinary, delete it
+     if (event.banner) {
+      const publicId = `acetrack/${getCloudinaryPublicId(event.banner)}`;
+
+      await cloudinary.uploader.destroy(publicId);
+      console.log("Old banner deleted from Cloudinary");
+    }
+
+    const isDeleted = await deleteEvent(req.params.id);
+
+    res.status(200).json({
+      success: true,
+      data: "Event removed",
     });
   } catch (err) {
     //check if invalid id format

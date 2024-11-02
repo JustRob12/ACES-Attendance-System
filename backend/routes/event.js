@@ -7,6 +7,7 @@ import {
   insertEvent,
   modifyEvent,
   uploadBanner,
+  removeEvent,
 } from "../controller/event.js";
 import { eventValidationRules, validate } from "../middleware/validator.js";
 
@@ -30,4 +31,5 @@ router.patch(
   authenticate,
   uploadBanner
 );
+router.delete("/event/:id", authenticate, removeEvent);
 export default router;

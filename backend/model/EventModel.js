@@ -16,7 +16,7 @@ export const createEvent = async (eventData) => {
   return db.promise().query(sql, values);
 };
 
-export const updateEvent = async (eventId, eventData) =>{
+export const updateEvent = async (eventId, eventData) => {
   let sql = `UPDATE ${table} SET name = ?, description= ?, startDate = ?, endDate = ?, status = ? WHERE id = ?`;
   const values = [
     eventData.name,
@@ -28,7 +28,7 @@ export const updateEvent = async (eventId, eventData) =>{
   ];
 
   return db.promise().query(sql, values);
-}
+};
 
 export const uploadEventBanner = async (eventId, bannerPath) => {
   let sql = `UPDATE ${table} SET banner = ? WHERE id = ?`;
@@ -46,4 +46,9 @@ export const getEvent = async () => {
 export const getEventById = async (eventId) => {
   let sql = `SELECT * FROM ${table} WHERE id = ?`;
   return db.promise().query(sql, eventId);
+};
+export const deleteEvent = async (id) => {
+  let sql = `DELETE FROM ${table} WHERE id = ?`;
+
+  return db.promise().query(sql, id);
 };
