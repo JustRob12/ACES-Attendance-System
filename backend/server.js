@@ -2,6 +2,7 @@ import express from "express";
 import user from "./routes/user.js";
 import event from "./routes/event.js";
 import auth from "./routes/auth.js";
+import attendance from "./routes/attendance.js";
 import errorHandler from "./middleware/error.js";
 import cors from "cors";
 import cookieParser from 'cookie-parser';
@@ -21,6 +22,7 @@ app.use(cookieParser());
 
 
 //auth routes
+app.use("/api/", attendance);
 app.use("/api/", auth)
 //user routes
 app.use("/api/", user);

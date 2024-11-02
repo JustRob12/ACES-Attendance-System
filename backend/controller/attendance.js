@@ -3,16 +3,17 @@ import {
   getAttendance,
   findAttendance,
   attendanceCheckout,
-} from "../model/AttendanceModel";
-import { getEventById } from "../model/EventModel";
-import { getStudentById } from "../model/StudentModel";
+} from "../model/AttendanceModel.js";
+import { getEventById } from "../model/EventModel.js";
+import { getStudentById } from "../model/StudentModel.js";
+import { ulid } from "ulidx";
 
 export const markAttendance = async (req, res, next) => {
   const { eventId, studentId } = req.body;
   try {
-    const event = await getEventById(eventId);
+    const [event] = await getEventById(eventId);
 
-    if (!event.active) {
+    if (event[0].status !== "1") {
       return res.status(403).json({
         success: false,
         message: "Event does not accept attendance at the moment",
@@ -28,18 +29,14 @@ export const markAttendance = async (req, res, next) => {
       });
     }
 
-    const isCheckOut = await findAttendance(studentId, eventId);
-    // console.log({
-    //   currentData: {eventId, student: student.id},
-    //   ifExists: isCheckOut
-    // })
+    const [isCheckOut] = await findAttendance(studentId, eventId);
 
-    if (isCheckOut) {
-      checkOut(student.id, eventId);
+    if (isCheckOut.length > 0) {
+      checkOut(studentId, eventId);
     } else {
       await createAttendance({
         event: eventId,
-        student: student.id,
+        student: studentId,
       });
     }
     res.status(201).json({
@@ -56,12 +53,14 @@ export const markAttendance = async (req, res, next) => {
 
 const checkOut = async (student, event) => {
   try {
+    const date = new Date().toISOString().slice(0, 19).replace('T', ' '); //local timestamp
+  
     const attendance = await attendanceCheckout({
-      checkOut: Date.now(),
+      checkOut: date,
       student,
       event,
     });
-
+   
     if (attendance) {
       return true;
     }

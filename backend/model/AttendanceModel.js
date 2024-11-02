@@ -3,20 +3,17 @@ import db from "../database/database.js";
 const table = "attendance";
 
 export const createAttendance = async (attendanceData) => {
-  let sql = `INSERT INTO ${table} (id, student, event, checkIn, checkOut) VALUES (?,?,?,?,?)`;
+  let sql = `INSERT INTO ${table} (student, event) VALUES (?,?)`;
   const values = [
-    attendanceData.id,
     attendanceData.student,
-    attendanceData.event,
-    attendanceData.checkIn,
-    attendanceData.checkOut,
+    attendanceData.event
   ];
 
   return db.promise().query(sql, values);
 };
 
 export const getAttendance = async () => {
-  let sql = `SELECT id, student, event, checkIn, checkOut FROM ${table}`;
+  let sql = `SELECT student, event, checkIn, checkOut FROM ${table}`;
   return db.promise().query(sql);
 };
 //get student using student id
@@ -27,6 +24,7 @@ export const findAttendance = async (studentId, eventId) => {
 };
 
 export const attendanceCheckout = async (attendanceData) => {
+    console.log(attendanceData)
   let sql = `UPDATE ${table} SET checkOut = ? WHERE student = ? && event = ? `;
   const values = [
     attendanceData.checkOut,
