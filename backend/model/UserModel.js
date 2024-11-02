@@ -29,6 +29,7 @@ export const getUserByEmail = async (email) => {
 };
 
 export const getUserById = async (id) => {
+
   let sql = `SELECT * FROM ${table} WHERE id = ?`;
   return db.promise().query(sql, id);
 };
