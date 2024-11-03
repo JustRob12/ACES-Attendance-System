@@ -15,6 +15,12 @@ export const loginValidationRules = () => [
   body("email").notEmpty().withMessage("Email is required"),
   body("password").notEmpty().withMessage("Password is required"),
 ];
+export const eventValidationRules = () =>[
+  body("name").notEmpty().withMessage("Name is required"),
+  body("startDate").notEmpty().withMessage("Start date is required"),
+  body("endDate").notEmpty().withMessage("End date is required"),
+  body("location").notEmpty().withMessage("Location is required")
+]
 
 // Middleware to handle validation errors
 export const validate = (req, res, next) => {
@@ -27,8 +33,3 @@ export const validate = (req, res, next) => {
   }
   next();
 };
-export const eventValidationRules = () =>[
-  body("name").notEmpty().withMessage("Name is required"),
-  body("startDate").notEmpty().withMessage("Start date is required"),
-  body("endDate").notEmpty().withMessage("End date is required"),
-]
