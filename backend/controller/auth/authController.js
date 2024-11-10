@@ -159,7 +159,7 @@ export const refreshAccessToken = async (req, res) => {
       // Fetch user details using the user ID
       const [users] = await getUserById(user.userId);
       const currentUser = users[0];
-      console.log(currentUser);
+
       // If user is not found
       if (!currentUser) {
         return res.status(404).json({
