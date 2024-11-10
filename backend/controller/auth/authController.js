@@ -45,7 +45,7 @@ export const login = async (req, res, next) => {
     );
 
     //generate refresh token
-    const refreshToken = jwt.sign({ userId: user.id }, REFRESH_KEY, {
+    const refreshToken = jwt.sign({ userId: user.id, role: user.role }, REFRESH_KEY, {
       expiresIn: REFRESH_EXPIRATION,
     });
 
