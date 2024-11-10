@@ -154,7 +154,7 @@ export const refreshAccessToken = async (req, res) => {
         message: "Invalid refresh token",
       });
     }
-    console.log(user);
+
     try {
       // Fetch user details using the user ID
       const [users] = await getUserById(user.userId);
@@ -170,7 +170,7 @@ export const refreshAccessToken = async (req, res) => {
 
       // Generate a new access token with both id and email in the payload
       const newAccessToken = jwt.sign(
-        { userId: currentUser.id, email: createUser.email },
+        { userId: currentUser.id, email: createUser.email,  role: currentUser.role},
         ACCESS_KEY, //secret key
         { expiresIn: ACCESS_EXPIRATION } // Token expiration time
       );
