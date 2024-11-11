@@ -20,6 +20,7 @@ export const insertEvent = async (req, res, next) => {
       id: eventId,
       name: data.name,
       description: data.description,
+      location: data.location,
       startDate: data.startDate,
       endDate: data.endDate,
       status: status,
@@ -54,6 +55,7 @@ export const modifyEvent = async (req, res, next) => {
     const eventData = {
       name: data.name || data.name, // If data.name is empty or null, fallback to data.firstname
       description: data.description || data.description,
+      location: data.location || data.location,
       startDate: data.startDate || data.startDate,
       endDate: data.endDate || data.endDate,
       status: data.status || data.status,
