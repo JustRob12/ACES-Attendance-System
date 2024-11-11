@@ -8,6 +8,7 @@ import {
 } from "../model/StudentModel.js";
 import { v2 as cloudinary } from "cloudinary";
 import { getCloudinaryPublicId } from "../helper/getPublicId.js";
+
 //fetch user by id
 export const findUser = async (req, res, next) => {
   try {
@@ -18,7 +19,7 @@ export const findUser = async (req, res, next) => {
     const user = users[0];
 
     if (!user) {
-      const error = new Error("Student not found");
+      const error = new Error("User not found");
       error.status = 404;
       error.success = false;
       return next(error);
@@ -28,28 +29,36 @@ export const findUser = async (req, res, next) => {
     const [students] = await getStudentId(req.user.userId);
     const student = students[0];
 
+    //if not student fetch user data only
     if (!student) {
-      const error = new Error("Student not found");
-      error.status = 404;
-      error.success = false;
-      return next(error);
+      const data = {
+        id: user.id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        middlename: user.middlename,
+        email: user.email,
+      };
+      res.status(200).json({
+        success: true,
+        data: data,
+      });
+    } else {
+      const data = {
+        id: user.id,
+        studId: student.studId,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        middlename: user.middlename,
+        email: user.email,
+        course: student.course,
+        year: student.year,
+        profilePicture: student.profilePicture,
+      };
+      res.status(200).json({
+        success: true,
+        data: data,
+      });
     }
-
-    const data = {
-      id: user.id,
-      studId: student.studId,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      middlename: user.middlename,
-      email: user.email,
-      course: student.course,
-      year: student.year,
-      profilePicture: student.profilePicture,
-    };
-    res.status(200).json({
-      success: true,
-      data: data,
-    });
   } catch (err) {
     //check if invalid id format
     if (err.name === "Cast Error") {
@@ -74,7 +83,7 @@ export const updateProfile = async (req, res, next) => {
     const user = users[0];
 
     if (!user) {
-      const error = new Error("Student not found");
+      const error = new Error("User not found");
       error.status = 404;
       error.success = false;
       return next(error);
@@ -84,28 +93,33 @@ export const updateProfile = async (req, res, next) => {
     const [students] = await getStudentId(req.user.userId);
     const student = students[0];
 
+    //if not student update user info
     if (!student) {
-      const error = new Error("Student not found");
-      error.status = 404;
-      error.success = false;
-      return next(error);
+      // Use existing values if the new data is an empty string or null
+      const userData = {
+        firstname: data.firstname || user.firstname, // If data.firstname is empty or null, fallback to user.firstname
+        lastname: data.lastname || user.lastname,
+        middlename: data.middlename || user.middlename,
+        email: data.email || user.email,
+      };
+      await updateUser(req.user.userId, userData);
+    } else {
+      // Use existing values if the new data is an empty string or null
+      const userData = {
+        firstname: data.firstname || user.firstname, // If data.firstname is empty or null, fallback to user.firstname
+        lastname: data.lastname || user.lastname,
+        middlename: data.middlename || user.middlename,
+        email: data.email || user.email,
+      };
+
+      const studentData = {
+        course: data.course || student.course,
+        year: data.year || student.year,
+      };
+
+      await updateUser(req.user.userId, userData);
+      await updateStudent(student.studId, studentData);
     }
-
-    // Use existing values if the new data is an empty string or null
-    const userData = {
-      firstname: data.firstname || user.firstname, // If data.firstname is empty or null, fallback to user.firstname
-      lastname: data.lastname || user.lastname,
-      middlename: data.middlename || user.middlename,
-      email: data.email || user.email,
-    };
-
-    const studentData = {
-      course: data.course || student.course,
-      year: data.year || student.year,
-    };
-
-    await updateUser(req.user.userId, userData);
-    await updateStudent(student.studId, studentData);
 
     res.status(200).json({ success: true, message: "User updated" });
   } catch (err) {
@@ -131,7 +145,7 @@ export const uploadProfile = async (req, res, next) => {
     // Find the user by id
     const [users] = await getUserById(req.user.userId);
     const user = users[0];
-    console.log(user)
+    console.log(user);
     if (!user) {
       const error = new Error("Student not found");
       error.status = 404;
@@ -150,7 +164,6 @@ export const uploadProfile = async (req, res, next) => {
       return next(error);
     }
 
-    
     // If the student has an existing profile picture in Cloudinary, delete it
     if (student.profilePicture) {
       const publicId = `acetrack/${getCloudinaryPublicId(
