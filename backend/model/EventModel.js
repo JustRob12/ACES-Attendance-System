@@ -3,7 +3,7 @@ import db from "../database/database.js";
 const table = "event";
 
 export const createEvent = async (eventData) => {
-  let sql = `INSERT INTO ${table} (id, name, description, location, startDate, endDate, status) VALUES (?,?,?,?,?,?)`;
+  let sql = `INSERT INTO ${table} (id, name, description, location, startDate, endDate, status) VALUES (?,?,?,?,?,?,?)`;
   const values = [
     eventData.id,
     eventData.name,
