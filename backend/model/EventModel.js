@@ -18,10 +18,11 @@ export const createEvent = async (eventData) => {
 };
 
 export const updateEvent = async (eventId, eventData) => {
-  let sql = `UPDATE ${table} SET name = ?, description= ?, startDate = ?, endDate = ?, status = ? WHERE id = ?`;
+  let sql = `UPDATE ${table} SET name = ?, description= ?, location = ?, startDate = ?, endDate = ?, status = ? WHERE id = ?`;
   const values = [
     eventData.name,
     eventData.description,
+    eventData.location,
     eventData.startDate,
     eventData.endDate,
     eventData.status,
