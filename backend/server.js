@@ -3,15 +3,16 @@ import user from "./routes/user.js";
 import event from "./routes/event.js";
 import auth from "./routes/auth.js";
 import attendance from "./routes/attendance.js";
+import students from "./routes/student.js";
 import errorHandler from "./middleware/error.js";
 import cors from "cors";
-import cookieParser from 'cookie-parser';
+import cookieParser from "cookie-parser";
 
 const port = process.env.PORT || 8080;
 const app = express();
 
 const corsOptions = {
-  origin: true, 
+  origin: true,
   credentials: true, // Allow cookies and credentials
 };
 
@@ -20,14 +21,14 @@ app.use(cors(corsOptions));
 //parse cookies
 app.use(cookieParser());
 
-
 //auth routes
+app.use("/api/", students);
 app.use("/api/", attendance);
-app.use("/api/", auth)
+app.use("/api/", auth);
 //user routes
 app.use("/api/", user);
 //event routes
-app.use("/api/",event)
+app.use("/api/", event);
 // Handle 404 errors for undefined routes
 app.use((req, res, next) => {
   res.status(404).json({

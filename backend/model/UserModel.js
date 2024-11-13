@@ -43,7 +43,7 @@ export const updateUser = async (userId, userData) => {
     userData.email,
     userId,
   ];
-  console.log(userData)
+
   return db.promise().query(sql, values);
 };
 
