@@ -37,11 +37,10 @@ export const uploadProfilePic = async (studentId, profilePath) => {
 };
 
 export const updateStudent = async (id, userData) => {
-  let sql = `UPDATE ${table} SET course = ?, year = ?, profilePicture = ? WHERE studId = ?`;
+  let sql = `UPDATE ${table} SET course = ?, year = ? WHERE studId = ?`;
   const values = [
     userData.course,
     userData.year,
-    userData.profilePicture,
     id
   ];
 
