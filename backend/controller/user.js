@@ -145,7 +145,7 @@ export const uploadProfile = async (req, res, next) => {
     // Find the user by id
     const [users] = await getUserById(req.user.userId);
     const user = users[0];
-    console.log(user);
+
     if (!user) {
       const error = new Error("Student not found");
       error.status = 404;

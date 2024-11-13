@@ -116,7 +116,7 @@ export const uploadBanner = async (req, res, next) => {
 
     //get file url
     const filePath = req.file.path;
-    console.log(filePath);
+
     // // Update the event's baner in the database with the Cloudinary URL
     await uploadEventBanner(req.params.id, filePath);
 
